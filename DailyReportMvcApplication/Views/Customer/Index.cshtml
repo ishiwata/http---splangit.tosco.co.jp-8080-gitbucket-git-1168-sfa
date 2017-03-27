@@ -1,0 +1,173 @@
+﻿@model IEnumerable<DailyReportMvcApplication.Models.Customer>
+@{
+    var grid = new WebGrid(source: Model, rowsPerPage: 20);
+}
+
+@{
+    ViewBag.Title = "顧客一覧";
+    if (ViewBag.SearchCondition == null)
+    {
+        ViewBag.SearchCondition = new DailyReportMvcApplication.Models.Customer();
+    }
+}
+
+<h2>顧客一覧</h2>
+<div>
+    @using (Html.BeginForm("Index", "Customer"))
+    {
+
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <fieldset>
+            <legend>DailyReportSearch</legend>
+            <table>
+                <tr>
+                    <th>
+                        @Html.Label("顧客名")
+                    </th>
+                    <td>
+                        <input size="30" id="customer_name" name="customer_name" type="text" value="@ViewBag.SearchCondition.customer_name" >
+                    </td>
+                    <th>
+                        @Html.Label("顧客よみ")
+                    </th>
+                    <td>
+                        <input size="30" id="customer_yomi" name="customer_yomi" type="text" value="@ViewBag.SearchCondition.customer_yomi" >
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.Label("担当部課")
+                    </th>
+                    <td>
+                        @Html.DropDownList("sales_department", new SelectList(new string[]{"西日本営業","東日本営業","名古屋営業","神戸営業"}, ViewBag.SearchCondition.sales_department),"選択してください" )
+                    </td>
+                    <th>
+                        @Html.Label("担当者")
+                    </th>
+                    <td>
+                        <input size="30" id="owner" name="owner" type="text" value="@ViewBag.SearchCondition.owner" >
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @Html.Label("カテゴリ")
+                    </th>
+                    <td>
+                        @Html.DropDownList("category", new SelectList(new string[]{"1.ＴＦ","2.東芝ユ","3.東芝シ","4.ＮＥＣ","5.富士通","6.ＪＦＥ","7.ベンダ","8.ユーザ","9.官公庁"}, ViewBag.SearchCondition.category),"選択してください" )
+                    </td>
+                    <th></th>
+                    <td style="text-align:right">
+                        <input type="submit" name="Download" value="XMLダウンロード" />
+                        <input type="submit" name="Search" value="絞り込み" />
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    }
+</div>
+<p>
+   <button onclick="location.href='@Url.Action("Create", new { page = ViewBag.page })'">新規登録</button>
+</p>
+@grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    alternatingRowStyle: "alt",
+    columns: grid.Columns(
+        grid.Column("id", header: "SEQ", style: "seq",
+             format: @<text>@item.id.ToString("0")</text>),
+        grid.Column("customer_name",  header:"顧客名", style: "customer_name", format: @<text>@Html.ActionLink((string)item.customer_name,
+            "Details", "Customer", new {id=item.id, page = ViewBag.page }, null)</text>),
+        grid.Column("customer_yomi", header: "顧客よみ", style: "customer_yomi",
+             format: @<text>@item.customer_yomi</text>),
+        grid.Column("department", header: "担当部課", style: "department",
+             format: @<text>@item.sales_department</text>),
+        grid.Column("owner", header: "担当者", style: "owner",
+             format: @<text>@item.owner</text>),
+        grid.Column("order", header: "表示優先度", style: "owner",
+             format: @<text>@item.order</text>)
+    )
+ )
+@section css{
+    <style type="text/css">
+        .grid
+        {
+            margin: 4px;
+            border-collapse: collapse;
+            width: 900px;
+        }
+
+        .head
+        {
+            background-color: #E8E8E8;
+            font-weight: bold;
+            color: #FFF;
+        }
+
+        .grid th, .grid td
+        {
+            border: 1px solid #C0C0C0;
+            padding: 5px;
+        }
+
+        .alt
+        {
+            background-color: #E8E8E8;
+            color: #000;
+        }
+
+        .seq
+        {
+
+            white-space: nowrap;
+        }
+
+        .customer_name
+        {
+
+            white-space: nowrap;
+        }
+
+        .customer_yomi
+        {
+
+            white-space: nowrap;
+        }
+
+        .department
+        {
+
+            white-space: nowrap;
+        }
+
+        .owner
+        {
+
+            white-space: nowrap;
+        }
+    </style>
+}
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.js")"></script>
+    <script type="text/javascript">
+        function submitCheck(e) {
+            if (!e) var e = window.event;
+
+            if (e.keyCode == 13) {
+                    return false;
+            }
+        }
+
+        $(document).ready(function () {
+            //サブミットチェックイベントハンドラセット
+            var list = document.getElementsByTagName("input");
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].type == 'text' || list[i].type == 'password') {
+                    list[i].onkeypress = function (event) {
+                        return submitCheck(event);
+                    };
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,226 @@
+﻿@model DailyReportMvcApplication.Models.DailyReport
+@{ DailyReportMvcApplication.Models.Employee UserInfo = (DailyReportMvcApplication.Models.Employee)HttpContext.Current.Session["UserInfo"]; }
+@{
+    ViewBag.Title = "活動報告登録";
+    var userName = UserInfo.user_id  + ":" + UserInfo.user_name;
+}
+
+<h2>活動報告登録</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>DailyReport</legend>
+
+        <div class="editor-label">
+            @Html.Label("表題")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.subject)
+            @Html.ValidationMessageFor(model => model.subject)
+        </div>
+        <div class="editor-label">
+             @Html.Label("顧客コード")
+        </div>
+        <div class="editor-field">
+            <label id="cus_id"></label>
+            @Html.HiddenFor(model => model.customer_id)
+            @Html.ValidationMessageFor(model => model.customer_id)
+        </div>
+
+        <div class="editor-label">
+             @Html.Label("顧客")
+        </div>
+        <div class="editor-field">
+           @Html.EditorFor(model => model.customer)
+            <a href="javascript:void(0);" onclick="add();" style="background-image: url(../Images/add.png); background-position: 0% 50%; background-repeat: no-repeat; padding-left: 20px; padding-top: 2px; padding-bottom: 3px;">顧客追加</a>
+        </div>
+
+        <div class="editor-label">
+             @Html.Label("営業担当者")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.owner, (SelectListItem[])ViewBag.employees, "選択してください")
+            @Html.ValidationMessageFor(model => model.owner)
+        </div>
+
+        <div class="editor-label">
+              @Html.Label("相手参加者")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.customer_attendee)
+            @Html.ValidationMessageFor(model => model.customer_attendee)
+        </div>
+
+        <div class="editor-label">
+              @Html.Label("参加者")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.attendee)
+            @Html.ValidationMessageFor(model => model.attendee)
+        </div>
+
+        <div class="editor-label">
+             @Html.Label("打合日付")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.contact_date, new { @Value = DateTime.Now, id = "datepicker" })
+            @Html.ValidationMessageFor(model => model.contact_date)
+        </div>
+
+        <div class="editor-label">
+             @Html.Label("打合時間")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.contact_time_start, new { @Value = DateTime.Now, id = "timepicker" })
+            @Html.ValidationMessageFor(model => model.contact_time_start)
+            ～
+            @Html.EditorFor(model => model.contact_time_end, new { @Value = DateTime.Now, id = "timepicker" })
+            @Html.ValidationMessageFor(model => model.contact_time_end)
+        </div>
+
+        <div class="editor-label">
+             @Html.Label("種別")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.speciation, new SelectList(new string[]{"往訪","来訪","メール","電話"}), "選択してください")
+        </div>
+
+        <div class="editor-label" style="height: 250px;">
+              @Html.Label("打合内容")
+        </div>
+        <div class="editor-field" style="height: 250px;">
+            @Html.TextAreaFor(
+                model => model.description, // プロパティ
+                10, // 行数
+                100, // 桁数
+                new { @class = "area" }
+            )
+            @Html.ValidationMessageFor(model => model.description)
+        </div>
+        <input type="hidden" id="user_id" name="user_id" value="@(userName)"/>
+        <p style="float: right;">
+            <input type="submit" value="登録" />
+        </p>
+    </fieldset>
+}
+
+<div>
+   <button onclick="location.href='@Url.Action("Index", new { page = ViewBag.page })'">一覧へ戻る</button>
+</div>
+@section css{
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.timepicker.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.autocomplete.css")" />
+    <style type="text/css">
+        div.editor-label
+        {
+            float: left;
+            width: 9%;
+            height: 35px;
+        }
+
+        div.editor-field
+        {
+            float: right;
+            width: 89%;
+            height: 35px;
+        }
+    </style>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.ui.datepicker-ja.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.timepicker.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.autocomplete.js")"></script>
+    <script type="text/javascript">
+	function add() {
+  	    //window.open('/sfa/Customer/DailyCallCreate', 'CustomerAdd', 'height=' + (window.screen.height) + ',width=800,left=' + (window.screen.width) + ',top=10,status=no,toolbar=no,resizable=yes,scrollbars=yes');
+  	    window.open('/Customer/DailyCallCreate', 'CustomerAdd', 'height=' + (window.screen.height) + ',width=800,left=' + (window.screen.width) + ',top=10,status=no,toolbar=no,resizable=yes,scrollbars=yes');
+	}
+
+	function submitCheck(e) {
+	    if (!e) var e = window.event;
+
+	    if (e.keyCode == 13) {
+	        if (confirm('送信してもよろしいですか？')) {
+	            input = e.srcElement ? e.srcElement : e.target;
+	            var form = input.parentNode;
+	            while (form != null && form.nodeName != 'FORM') {
+	                form = form.parentNode;
+	            }
+	            if (form != null)
+	                form.submit();
+	        }
+	        else {
+	            return false;
+	        }
+	    }
+	}
+
+	$(document).ready(function () {
+                //サブミットチェックイベントハンドラセット
+	            var list = document.getElementsByTagName("input");
+	            for (var i = 0; i < list.length; i++) {
+	                if (list[i].type == 'text' || list[i].type == 'password') {
+	                    list[i].onkeypress = function (event) {
+	                        return submitCheck(event);
+	                    };
+	                }
+	            }
+
+            function findValue(li) {
+                if (li == null) return alert("No match!");
+
+                // if coming from an AJAX call, let's use the CityId as the value
+                if (!!li.extra) {
+                    var sValue = li.extra[0];
+                    var sOwner = li.extra[1];
+                } else {
+                    var sValue = li.selectValue;
+                }
+                
+                $('#customer_id').val(sValue);
+                $('#cus_id').html(sValue);
+                $('#owner').val(sOwner);
+                //alert("The value you selected was: " + sOwner);
+            }
+
+            function selectItem(li) {
+                findValue(li);
+            }
+
+            function formatItem(row) {
+                return row[0] + " (id: " + row[1] + ")";
+            }
+
+            $('#customer').autocomplete('/api/customernames', {
+            //$('#customer').autocomplete('/sfa/api/customernames', {
+                onItemSelect: selectItem
+            });
+
+            if ($('#customer_id').val() != null) {
+                $('#cus_id').html($('#customer_id').val());
+            }
+
+            $.datepicker.setDefaults($.extend($.datepicker.regional['ja']));
+            $('#contact_date').datepicker({
+                dateFormat: 'yy/mm/dd',
+                showStatus: true,
+                showWeeks: true,
+                highlightWeek: true,
+                numberOfMonths: 1,
+                showAnim: "scale",
+                showOptions: {
+                    origin: ["top", "left"]
+                }
+            });
+            $('#contact_time_start').timepicker({ 'scrollDefaultNow': true, 'timeFormat': 'H:i', 'step': 15 });
+            $('#contact_time_end').timepicker({ 'scrollDefaultNow': true, 'timeFormat': 'H:i', 'step': 15 });
+	});
+    </script>
+}
+

@@ -1,0 +1,103 @@
+﻿@model DailyReportMvcApplication.Models.DailyReport
+
+@{
+    ViewBag.Title = "活動報告詳細";
+}
+
+<h2>活動報告詳細</h2>
+
+<fieldset>
+    <legend>DailyReport</legend>
+
+    <div class="display-label">
+         @Html.Label("表題")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.subject)
+    </div>
+
+    <div class="display-label">
+        @Html.Label("顧客コード")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.customer_id)
+    </div>
+
+    <div class="display-label">
+         @Html.Label("顧客")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.customer)
+    </div>
+
+    <div class="display-label">
+        @Html.Label("営業担当者")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.owner)
+    </div>
+    
+    <div class="display-label">
+          @Html.Label("相手参加者")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.customer_attendee)
+    </div>
+
+    <div class="display-label">
+          @Html.Label("参加者")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.attendee)
+    </div>
+
+    <div class="display-label">
+         @Html.Label("打合日付")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.contact_date)
+    </div>
+
+    <div class="display-label">
+         @Html.Label("打合時間")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.contact_time_start)
+        ～
+        @Html.DisplayFor(model => model.contact_time_end)
+    </div>
+
+    <div class="display-label">
+         @Html.Label("種別")
+    </div>
+    <div class="display-field">
+            @Html.DisplayFor(model => model.speciation)
+    </div>
+
+    <div class="display-label" style="height: 250px">
+          @Html.Label("打合内容")
+    </div>
+    <div class="display-field" style="height: 250px">
+             @Html.TextAreaFor(
+                model => model.description, // プロパティ
+                10, // 行数
+                100, // 桁数
+                new { @readonly="readonly"  }
+            )
+    </div>
+
+</fieldset>
+<p>
+    <button onclick="location.href='@Url.Action("Edit", new { id=Model.id, page = ViewBag.page })'">編集</button>
+    <button onclick="location.href='@Url.Action("Delete", new { id=Model.id, page = ViewBag.page})'">削除</button>
+    <button onclick="location.href='@Url.Action("Index", new {page = ViewBag.page })'">一覧へ戻る</button>
+</p>
+<p style="float: right;">
+    <button onclick="location.href='@Url.Action("Copy", new { id=Model.id})'">コピーする</button>
+</p>
+@section css{
+    <style type="text/css">
+        div.display-label { float: left; width: 9%; height: 35px;}
+        div.display-field { float: right; width: 89%; height: 35px;}
+    </style>
+}

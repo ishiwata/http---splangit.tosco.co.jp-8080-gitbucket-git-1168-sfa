@@ -1,0 +1,15 @@
+SELECT 
+       [user_id]
+      ,[customer_id]
+	  ,count([id])
+  FROM [sfa].[dbo].[DailyReports]
+  GROUP BY [user_id], [customer_id]
+  ORDER BY count([id]) desc;
+  
+  
+  
+http://fess.codelibs.org/ja/9.0/user/search-not.html
+
+
+http://fess.codelibs.org/ja/9.0/user/json-response.html
+

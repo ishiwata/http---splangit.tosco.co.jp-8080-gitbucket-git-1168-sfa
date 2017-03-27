@@ -1,0 +1,200 @@
+﻿@model DailyReportMvcApplication.Models.Customer
+
+@{
+    ViewBag.Title = "顧客編集";
+}
+
+<h2>顧客編集</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Customer</legend>
+
+        @Html.HiddenFor(model => model.id)
+
+        <div class="editor-label">
+           @Html.Label("顧客名")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.customer_name)
+            @Html.ValidationMessageFor(model => model.customer_name)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("顧客よみ")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.customer_yomi)
+            @Html.ValidationMessageFor(model => model.customer_yomi)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("部課")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.department)
+            @Html.ValidationMessageFor(model => model.department)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("営業部署")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.sales_department,
+                new SelectList(new string[]{"西日本営業","東日本営業","名古屋営業","神戸営業"}),  "選択してください")
+            @Html.ValidationMessageFor(model => model.sales_department)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("主担当")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.owner, (SelectListItem[])ViewBag.employees, "選択してください")
+            @Html.ValidationMessageFor(model => model.owner)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("郵便番号")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.zip_code)
+            @Html.ValidationMessageFor(model => model.zip_code)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("住所")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.address)
+            @Html.ValidationMessageFor(model => model.address)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("電話番号")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.tel)
+            @Html.ValidationMessageFor(model => model.tel)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("Fax")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.fax)
+            @Html.ValidationMessageFor(model => model.fax)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("URL")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.url)
+            @Html.ValidationMessageFor(model => model.url)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("カテゴリ")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.category,
+                new SelectList(new string[]{"1.ＴＦ","2.東芝ユ","3.東芝シ","4.ＮＥＣ","5.富士通","6.ＪＦＥ","7.ベンダ","8.ユーザ","9.官公庁"}), "選択してください")
+            @Html.ValidationMessageFor(model => model.category)
+       </div>
+
+        <div class="editor-label">
+            @Html.Label("メモ")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.memo)
+            @Html.ValidationMessageFor(model => model.memo)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("サイボウズコード")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.cybozu_seq)
+            @Html.ValidationMessageFor(model => model.cybozu_seq)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("MA-EYEコード")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ma_eyes_seq)
+            @Html.ValidationMessageFor(model => model.ma_eyes_seq)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("表示優先度")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.order)
+            @Html.ValidationMessageFor(model => model.order)
+        </div>
+
+        <p style="float: right;">
+            <input type="submit" value="保存" />
+        </p>
+    </fieldset>
+}
+
+<div>
+   <button onclick="location.href='@Url.Action("Index", new { page = ViewBag.page })'">一覧へ戻る</button>
+</div>
+@section css{
+    <style type="text/css">
+        div.editor-label
+        {
+            float: left;
+            width: 19%;
+            height: 35px;
+        }
+
+        div.editor-field
+        {
+            float: right;
+            width: 79%;
+            height: 35px;
+        }
+    </style>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    	function submitCheck(e) {
+	        if (!e) var e = window.event;
+
+	        if (e.keyCode == 13) {
+	            if (confirm('送信してもよろしいですか？')) {
+	                input = e.srcElement ? e.srcElement : e.target;
+	                var form = input.parentNode;
+	                while (form != null && form.nodeName != 'FORM') {
+	                    form = form.parentNode;
+	                }
+	                if (form != null)
+	                    form.submit();
+	            }
+	            else {
+	                return false;
+	            }
+	        }
+	    }
+
+	    $(document).ready(function () {
+	        //サブミットチェックイベントハンドラセット
+	        var list = document.getElementsByTagName("input");
+	        for (var i = 0; i < list.length; i++) {
+	            if (list[i].type == 'text' || list[i].type == 'password') {
+	                list[i].onkeypress = function (event) {
+	                    return submitCheck(event);
+	                };
+	            }
+	        }
+	    });
+    </script>
+}

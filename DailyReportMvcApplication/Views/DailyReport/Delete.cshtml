@@ -1,0 +1,116 @@
+﻿@model DailyReportMvcApplication.Models.DailyReport
+
+@{
+    ViewBag.Title = "活動報告削除";
+}
+
+<h2>活動報告削除</h2>
+
+<h3 style="color:red">本当に削除してよろしいですか?</h3>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<fieldset>
+    <legend>DailyReport</legend>
+
+    <div class="display-label">
+        @Html.Label("表題")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.subject)
+    </div>
+    
+    <div class="display-label">
+        @Html.Label("顧客コード")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.customer_id)
+    </div>
+
+    <div class="display-label">
+        @Html.Label("顧客")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.customer)
+    </div>
+
+    <div class="display-field">
+        @Html.Label("営業担当者")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.owner)
+    </div>
+
+    <div class="display-label">
+       @Html.Label("相手参加者")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.customer_attendee)
+    </div>
+
+    <div class="display-label">
+       @Html.Label("参加者")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.attendee)
+    </div>
+
+    <div class="display-label">
+        @Html.Label("打合日付")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.contact_date)
+    </div>
+
+    <div class="display-field">
+        @Html.Label("打合時間")
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.contact_time_start)
+        ～
+        @Html.DisplayFor(model => model.contact_time_end)
+    </div>
+
+    <div class="display-label">
+         @Html.Label("種別")
+    </div>
+    <div class="display-field">
+          @Html.DisplayFor(model => model.speciation)
+    </div>
+
+    <div class="display-label" style="height: 250px">
+        @Html.Label("打合内容")
+    </div>
+    <div class="display-field" style="height: 250px">
+        @Html.TextAreaFor(
+                model => model.description, // プロパティ
+                10, // 行数
+                100, // 桁数
+                new { @disabled = "disabled" }
+            )
+    </div>
+</fieldset>
+    <p style="float: right;">
+        <input type="submit" value="削除"/>
+    </p>
+}
+<div>
+    <button onclick="location.href='@Url.Action("Index", new { page = ViewBag.page })'">一覧へ戻る</button>
+</div>
+@section css{
+    <style type="text/css">
+        div.display-label
+        {
+            float: left;
+            width: 9%;
+            height: 35px;
+        }
+
+        div.display-field
+        {
+            float: right;
+            width: 89%;
+            height: 35px;
+        }
+    </style>
+}

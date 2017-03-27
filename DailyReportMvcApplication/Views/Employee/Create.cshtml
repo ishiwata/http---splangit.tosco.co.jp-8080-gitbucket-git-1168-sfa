@@ -1,0 +1,44 @@
+﻿@model DailyReportMvcApplication.Models.Employee
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Employee</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.user_id)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.user_id)
+            @Html.ValidationMessageFor(model => model.user_id)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.user_name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.user_name)
+            @Html.ValidationMessageFor(model => model.user_name)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

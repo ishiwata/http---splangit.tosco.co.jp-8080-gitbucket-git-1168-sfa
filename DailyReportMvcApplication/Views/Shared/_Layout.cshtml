@@ -1,0 +1,64 @@
+﻿@{ DailyReportMvcApplication.Models.Employee UserInfo = (DailyReportMvcApplication.Models.Employee)HttpContext.Current.Session["UserInfo"]; }
+@* IEバージョン判定ビューヘルパー *@
+@helper metaSelect()
+{
+    if (Request.Browser.Browser == "IE" && Request.Browser.Version == "10.0") 
+    {
+        <meta http-equiv='X-UA-Compatible' content='IE=EmulateIE8'>
+    }
+}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    @metaSelect()
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title TOSCO SFAアプリケーション</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+    @if (IsSectionDefined("css"))
+    {
+        @RenderSection("css");
+    }
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <header>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p class="site-title">@Html.ActionLink("TOSCO SFA(仮)", "Index", "Home")</p>
+            </div>
+            <div class="float-right">
+                <section id="login">
+                    こんにちは、<span class="username">@UserInfo.user_name</span>　さん
+                </section>
+                <nav>
+                    <ul id="menu">
+                        <li>@Html.ActionLink("ホーム", "Index", "Home")</li>
+                        <li>@Html.ActionLink("活動報告", "Index", "DailyReport")</li>
+                        <li>@Html.ActionLink("顧客マスタ", "Index", "Customer")</li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+        </section>
+    </div>
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p>&copy; @DateTime.Now.Year &copy;TOSCO Corp. All Rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
